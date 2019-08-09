@@ -52,12 +52,14 @@ class MainActivity : AppCompatActivity() {
         adapter = MainAdapter(uBickList)
         recyclerView.adapter = adapter
 
-        adapter!!.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener(
-            { baseQuickAdapter: BaseQuickAdapter<Any, BaseViewHolder>, view: View, i: Int ->
+//        adapter!!.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener(
+//            { baseQuickAdapter: BaseQuickAdapter<Any, BaseViewHolder>, view: View, i: Int ->
+//
+//
+//            Toast.makeText(this,"onClick ${i}",Toast.LENGTH_SHORT).show()
+//        }))
 
 
-            Toast.makeText(this,"onClick ${i}",Toast.LENGTH_SHORT).show()
-        }))
 
     }
 
