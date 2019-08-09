@@ -36,7 +36,7 @@ import com.google.maps.android.clustering.ClusterManager
  *  取得使用者位置
  */
 
-class MapsActivity : AppCompatActivity(), ButtonClickCallBack {
+class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallback,GoogleMap.OnMarkerClickListener{
 
 
 
@@ -64,9 +64,9 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack {
         view = findViewById(R.id.view)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        val mapFragment = supportFragmentManager
-//            .findFragmentById(R.id.map) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
         observerViewModel()
         btnReTry.setOnClickListener(View.OnClickListener { v ->
@@ -133,37 +133,37 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        mMap = googleMap
-//
-//        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(-34.0, 151.0)
-//        if (mMap == null){
-//            return
-//        }
-//
-//        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-//
-//
-//        mMap!!.setOnMarkerClickListener(this@MapsActivity)
-//        mMap!!.setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener { marker ->
-//            intent = Intent()
-//            intent.setClass(this, MainActivity::class.java)
-//            startActivity(intent)
-//        })
-////        setUpClusterManager(mMap)
-//
-//    }
-//
-//
-//
-//    override fun onMarkerClick(p0: Marker?): Boolean {
-//
-//        p0!!.showInfoWindow()
-//
-//        return false
-//    }
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        if (mMap == null){
+            return
+        }
+
+        mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+
+        mMap!!.setOnMarkerClickListener(this@MapsActivity)
+        mMap!!.setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener { marker ->
+            intent = Intent()
+            intent.setClass(this, MainActivity::class.java)
+            startActivity(intent)
+        })
+//        setUpClusterManager(mMap!!)
+
+    }
+
+
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+
+        p0!!.showInfoWindow()
+
+        return false
+    }
 //
 ////    private void setUpClusterManager(GoogleMap googleMap){
 //////        ClusterManager<User> clusterManager = new ClusterManager(this, googleMap);  // 3
@@ -173,15 +173,15 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack {
 //////        clusterManager.cluster();  // 5
 //////    }
 //
-//    fun setUpClusterManager(googleMap: GoogleMap){
-//
-//      clusterManager = ClusterManager<Record>(this,googleMap)
-//        clusterManager.renderer = MarkerClusterRender(this,googleMap,clusterManager)
-//        googleMap.setOnCameraIdleListener(clusterManager)
-//        clusterManager.addItems(uBickList)
-//        clusterManager.cluster()
-//
-//    }
+    fun setUpClusterManager(googleMap: GoogleMap){
+
+      clusterManager = ClusterManager<Record>(this,googleMap)
+        clusterManager.renderer = MarkerClusterRender(this,googleMap,clusterManager)
+        googleMap.setOnCameraIdleListener(clusterManager)
+        clusterManager.addItems(uBickList)
+        clusterManager.cluster()
+
+    }
 
     private fun observerViewModel() {
 
@@ -194,9 +194,9 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack {
             adapter!!.setListData(uBickList)
         }
 
-//            if (mMap != null){
-//                setUpClusterManager(mMap!!)
-//            }
+            if (mMap != null){
+                setUpClusterManager(mMap!!)
+            }
 
         })
     }
