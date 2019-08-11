@@ -24,10 +24,10 @@ class MarkerClusterRender(context: Context?, map: GoogleMap?, clusterManager: Cl
 
 init {
     //這裡是設定圖標的外框
-    iconGenerator =  IconGenerator(context);
-    markerImageView = ImageView(context);
-    markerImageView.setLayoutParams( ViewGroup.LayoutParams(60 , 40))
-    iconGenerator.setContentView(markerImageView);
+    iconGenerator =  IconGenerator(context)
+    markerImageView = ImageView(context)
+    markerImageView.layoutParams = ViewGroup.LayoutParams(60 , 40)
+    iconGenerator.setContentView(markerImageView)
 }
 
     override fun onBeforeClusterItemRendered(item: Record?, markerOptions: MarkerOptions?) {
@@ -39,13 +39,13 @@ init {
             markerImageView.setImageResource(R.drawable.location_vector_icon2)
             val icon = iconGenerator.makeIcon()
             markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
-            markerOptions.title(item!!.getTitle())
+            markerOptions.title(item.title)
 
-        } else if (item!!.sarea.equals("土城區")) {
+        } else if (item.sarea.equals("土城區")) {
             markerImageView.setImageResource(R.drawable.location_vector_icon)
             val icon = iconGenerator.makeIcon()
             markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
-            markerOptions.title(item!!.getTitle())
+            markerOptions.title(item.title)
         }
 
         //不使用外框寫法
@@ -68,11 +68,11 @@ init {
 
     //轉bitmap
     fun  bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
-        var vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable!!.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-       val bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-       val canvas =  Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+        var vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas =  Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }

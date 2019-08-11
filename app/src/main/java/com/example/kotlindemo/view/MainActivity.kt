@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
          tvTitleBar = findViewById(R.id.tvTitleBar)
         recyclerView = findViewById(R.id.recyclerView)
 
-        tvTitleBar.setText("KotlinRecyclerViewDemo")
+        tvTitleBar.text = "KotlinRecyclerViewDemo"
         model = ViewModelProviders.of(this)[MainActivityViewModel::class.java]
         initView()
         observerViewModel()
@@ -52,12 +52,12 @@ class MainActivity : AppCompatActivity() {
         adapter = MainAdapter(uBickList)
         recyclerView.adapter = adapter
 
-        adapter!!.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener(
+        adapter!!.onItemClickListener = BaseQuickAdapter.OnItemClickListener(
             { baseQuickAdapter: BaseQuickAdapter<Any, BaseViewHolder>, view: View, i: Int ->
 
 
-            Toast.makeText(this,"onClick ${i}",Toast.LENGTH_SHORT).show()
-        }))
+                Toast.makeText(this,"onClick ${i}",Toast.LENGTH_SHORT).show()
+            })
 
     }
 

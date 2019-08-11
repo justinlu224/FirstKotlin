@@ -17,6 +17,16 @@
           android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
 
+<androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/clSearch"
+        android:layout_marginTop="30dp"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
 
         <AutoCompleteTextView
@@ -29,6 +39,7 @@
                 android:background="@drawable/input_shape"
                 android:hint="       請輸入要搜尋的人名..."
                 android:padding="6dp"
+
                 android:completionThreshold="1"
                 android:textColor="@color/colorAccent"
                 map:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +68,7 @@
                 map:layout_constraintBottom_toBottomOf="@+id/actSearch"
                 map:layout_constraintEnd_toEndOf="@+id/actSearch"
                 map:layout_constraintTop_toTopOf="@+id/actSearch" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 <androidx.recyclerview.widget.RecyclerView
         map:layout_constraintTop_toTopOf="parent"
@@ -70,11 +82,12 @@
 </androidx.recyclerview.widget.RecyclerView>
 
     <View
-            android:id="@+id/view"
+            android:id="@+id/viewTouch"
         map:layout_constraintBottom_toTopOf="@id/btnReTry"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
+            android:background="@color/color_view_blue"
           android:layout_height="80dp"/>
 
     <Button

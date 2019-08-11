@@ -1,12 +1,20 @@
 package com.example.kotlindemo.view
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
+import android.view.animation.OvershootInterpolator
+import android.view.animation.TranslateAnimation
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
+import kotlinx.android.synthetic.main.item.*
 
 /***
  *  權限判斷
@@ -47,8 +56,12 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
     private lateinit var btnReTry:Button
     private lateinit var actSearch:AutoCompleteTextView
     private var adapter: MapSearchAdapter? = null
+    private var clSearch: ConstraintLayout? = null
 
-    private var view:View? = null
+    private var viewTouch:View? = null
+
+    private var tranlsation = false
+    private var isDown = true
 
 //    private lateinit var  recyclerView: RecyclerView
 //
@@ -61,7 +74,8 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
         btnReTry= findViewById(R.id.btnReTry)
 //        recyclerView = findViewById(R.id.recyclerView)
         actSearch = findViewById(R.id.actSearch)
-        view = findViewById(R.id.view)
+        viewTouch = findViewById(R.id.viewTouch)
+        clSearch = findViewById(R.id.clSearch)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -76,6 +90,7 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 
 
         initViewTouchLin()
+
 
 
 
@@ -99,7 +114,119 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 
     }
 
+    private fun initAnimation() {
+
+        val animSet = AnimationSet(true)
+        animSet.isFillEnabled = true
+
+        val alphAnimation = AlphaAnimation(1.0f, 0.2f)
+        alphAnimation.duration = 1000
+
+
+
+        val translateAnimation = TranslateAnimation(0f,0f,0f,-100f)
+        translateAnimation.duration = 1000
+
+        animSet.addAnimation(alphAnimation)
+        animSet.addAnimation(translateAnimation)
+        clSearch!!.startAnimation(animSet)
+
+
+    }
+
+//    private fun initDownAnim(){
+//        val animSet = AnimationSet(true)
+//        animSet.isFillEnabled = true
+//
+//        val alphAnimation = AlphaAnimation(1.0f, 0.2f)
+//        alphAnimation.duration = 1000
+//
+//
+//
+//        val translateAnimation = TranslateAnimation(0f,0f,-100f,100f)
+//        translateAnimation.duration = 1000
+//        translateAnimation.fillAfter = true
+//        translateAnimation.interpolator = OvershootInterpolator()
+//
+//        animSet.addAnimation(alphAnimation)
+//        animSet.addAnimation(translateAnimation)
+//        clSearch!!.startAnimation(animSet)
+//    }
+
+    private fun initDownAnim(){
+        val animSet = AnimatorSet()
+
+
+        val alphAnimation = AlphaAnimation(1.0f, 0.2f)
+        alphAnimation.duration = 1000
+
+//        val alph = ObjectAnimator.ofFloat(clSearch,)
+
+
+        val translateAnimation = TranslateAnimation(0f,0f,-100f,100f)
+        translateAnimation.duration = 1000
+
+//        animSet.addAnimation(translateAnimation)
+        animSet.playTogether(tranlsationY(clSearch!!,-200f),alph(clSearch!!,1f))
+        animSet.start()
+        tranlsation = true
+    }
+    private fun tranlsationY(view: View, y: Float): ObjectAnimator{
+
+        if(tranlsation == false){
+            return ObjectAnimator.ofFloat(view,"TranslationY", 0f,y)
+        }else{
+            return ObjectAnimator.ofFloat(view,"TranslationY", y,0f)
+        }
+
+    }
+
+    private fun alph(view: View, alph: Float): ObjectAnimator{
+        if(tranlsation == false){
+            return ObjectAnimator.ofFloat(view,"alpha", alph,0f,0f)
+        }else{
+            return ObjectAnimator.ofFloat(view,"alpha", 0f,0f,alph)
+        }
+    }
+
+
     private fun initViewTouchLin() {
+
+        viewTouch!!.setOnTouchListener(object: OnSwipeTouchListener(){
+
+
+            override fun onSwipeRight() {
+                Log.d("viewTouch","onSwipeRight")
+            }
+
+            override fun onSwipeLeft() {
+                Log.d("viewTouch","onSwipeLeft")
+            }
+
+            override fun onSwipeTop() {
+                Log.d("viewTouch","onSwipeTop")
+
+                if (isDown == false){
+                    return
+                }else{
+                    initDownAnim()
+                    isDown =false
+                }
+
+            }
+
+            override fun onSwipeBottom() {
+                Log.d("viewTouch","onSwipeBottom")
+                if(isDown == true){
+                    return
+                }else{
+                    initDownAnim()
+                    tranlsation = false
+                    isDown = true
+                }
+
+            }
+        })
 
     }
 

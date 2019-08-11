@@ -46,14 +46,14 @@ class MapSearchAdapter(context: Context, resource: Int, objects: MutableList<Rec
         var convertView = convertView
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_search, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_search, parent, false)
         }
         val tvSna =  convertView!!.findViewById<TextView>(R.id.tvSna)
-        tvSna.setText(recordData!!.sna)
-        val tvSbi = convertView!!.findViewById<TextView>(R.id.tvSbi)
-        tvSbi.setText("可借數量：${recordData.sbi}")
-        val tvBemp = convertView!!.findViewById<TextView>(R.id.tvBemp)
-        tvBemp.setText("可還數量：${recordData.bemp}")
+        tvSna.text = recordData!!.sna
+        val tvSbi = convertView.findViewById<TextView>(R.id.tvSbi)
+        tvSbi.text = "可借數量：${recordData.sbi}"
+        val tvBemp = convertView.findViewById<TextView>(R.id.tvBemp)
+        tvBemp.text = "可還數量：${recordData.bemp}"
 
         return convertView
     }
@@ -78,7 +78,7 @@ class MapSearchAdapter(context: Context, resource: Int, objects: MutableList<Rec
                     filterResults.values = filteredList
                     filterResults.count = filteredList.size
                     Log.d("222","filterResults")
-                    return filterResults;
+                    return filterResults
 
                 } else {
                     Log.d("222","FilterResults")
