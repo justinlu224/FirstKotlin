@@ -15,6 +15,7 @@ class MainActivityViewModel: ViewModel() {
     private var newTaipeiCity = MutableLiveData<NewTaipeiCityModel>()
     private var list: MutableList<User> = ArrayList()
     private val apiService = APIConst.getAPIService()
+    private var markerList = MutableLiveData<List<Record>>()
 
 
     init {
@@ -36,6 +37,7 @@ class MainActivityViewModel: ViewModel() {
 
                 if (data != null) {
                     newTaipeiCity.value = data
+                    markerList.value = data.result.records
                     Log.d("MvvM","data: ${data.result.records.get(0).sarea}")
                 }else{
                     Log.d("MvvM","data: null")
@@ -50,6 +52,9 @@ class MainActivityViewModel: ViewModel() {
         getNewTaipeiCityList()
     }
 
+    fun getMarkerList():LiveData<List<Record>>{
+        return markerList
+    }
 
     fun getUserList(): LiveData<List<User>> {
 
