@@ -262,11 +262,13 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        Log.d("onMapReady", "onMapReady")
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
         if (mMap == null){
             return
+        }else{
+            setUpClusterManager(mMap!!)
         }
 
         mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
@@ -279,7 +281,10 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
             intent.setClass(this, MainActivity::class.java)
             startActivity(intent)
         })
+
 //        setUpClusterManager(mMap!!)
+
+
 
     }
 
@@ -291,6 +296,7 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 
         return false
     }
+
 //
 ////    private void setUpClusterManager(GoogleMap googleMap){
 //////        ClusterManager<User> clusterManager = new ClusterManager(this, googleMap);  // 3
@@ -300,6 +306,10 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 //////        clusterManager.cluster();  // 5
 //////    }
 //
+
+
+
+
     fun setUpClusterManager(googleMap: GoogleMap){
 
       clusterManager = ClusterManager<Record>(this,googleMap)
@@ -312,19 +322,17 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 
     private fun observerViewModel() {
 
-        viewModel.getNewTaipeiCityLiveData().observe(this, Observer<NewTaipeiCityModel>{ data ->
+
+        viewModel.getMarkerList().observe(this, Observer<List<Record>> {data ->
             Log.d("api", "api1: ${data}")
-           uBickList = data.result.records as ArrayList<Record>
-
-
+            uBickList = data as ArrayList<Record>
             if(adapter != null){
-            adapter!!.setListData(uBickList)
-        }
+                adapter!!.setListData(uBickList)
+            }
 
             if (mMap != null){
                 setUpClusterManager(mMap!!)
             }
-
         })
     }
 
@@ -341,7 +349,7 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
     override fun onStart() {
         super.onStart()
         Log.d("lifecycle", "onStart: ")
-        viewModel.reTry()
+//        viewModel.reTry()
     }
 
 
