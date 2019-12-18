@@ -23,6 +23,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.kotlindemo.R
 import com.example.kotlindemo.callBack.ButtonClickCallBack
+import com.example.kotlindemo.model.GPSTracker2
 import com.example.kotlindemo.model.MainActivityViewModel
 import com.example.kotlindemo.model.NewTaipeiCityModel
 import com.example.kotlindemo.model.Record
@@ -57,6 +58,7 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
     private lateinit var actSearch:AutoCompleteTextView
     private var adapter: MapSearchAdapter? = null
     private var clSearch: ConstraintLayout? = null
+    var gpsTracker2:GPSTracker2? = null
 
     private var viewTouch:View? = null
 
@@ -86,6 +88,9 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
         btnReTry.setOnClickListener(View.OnClickListener { v ->
             viewModel.reTry()
         })
+
+        gpsTracker2 = GPSTracker2(this)
+
         initActSearch()
 
 
@@ -114,6 +119,12 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
 
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+            if(requestCode == 2){
+                Log.d("MapsActivity","location: ")
+            }
+
+    }
     private fun initAnimation() {
 
         val animSet = AnimationSet(true)
@@ -265,15 +276,19 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
         Log.d("onMapReady", "onMapReady")
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        if (mMap == null){
+        if (mMap == null)
             return
-        }else{
+        else
             setUpClusterManager(mMap!!)
-        }
+
+//        mMap?.let { setUpClusterManager(it) }   判空另一種寫法 let
+
 
         mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
+        var lat = gpsTracker2?.getLatitude()
+        var lon = gpsTracker2?.getLongitude()
+        Log.d("MapsActivity","location: $lat , $lon")
 
         mMap!!.setOnMarkerClickListener(this@MapsActivity)
         mMap!!.setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener { marker ->
@@ -326,13 +341,15 @@ class MapsActivity : AppCompatActivity(), ButtonClickCallBack ,OnMapReadyCallbac
         viewModel.getMarkerList().observe(this, Observer<List<Record>> {data ->
             Log.d("api", "api1: ${data}")
             uBickList = data as ArrayList<Record>
-            if(adapter != null){
+            if(adapter != null)
                 adapter!!.setListData(uBickList)
-            }
 
-            if (mMap != null){
+//            adapter?.let { it.setListData(uBickList) }
+
+
+            if (mMap != null)
                 setUpClusterManager(mMap!!)
-            }
+
         })
     }
 
