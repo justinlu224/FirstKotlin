@@ -47,11 +47,11 @@ class MainSearchAdapter(data: MutableList<Record>?) : BaseQuickAdapter<Record, B
                             filteredList.add(row)
                         }
                     }
-                    var filterResults =  FilterResults();
+                    var filterResults =  FilterResults()
                     filterResults.values = filteredList
                     filterResults.count = filteredList.size
                     Log.d("222","filterResults")
-                    return filterResults;
+                    return filterResults
 
                 } else {
                     Log.d("222","FilterResults")

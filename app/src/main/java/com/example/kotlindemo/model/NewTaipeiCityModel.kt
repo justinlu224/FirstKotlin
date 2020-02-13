@@ -20,10 +20,10 @@ data class NewTaipeiCityModel(
 
 data class Result(
     val fields: List<Field>,
-    val limit: Int,
+    var limit: Int,
     val records: List<Record>,
     val resource_id: String,
-    val total: Int
+    var total: Int
 )
 
 data class Field(

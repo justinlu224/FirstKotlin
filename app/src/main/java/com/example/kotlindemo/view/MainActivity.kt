@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
          tvTitleBar = findViewById(R.id.tvTitleBar)
         recyclerView = findViewById(R.id.recyclerView)
 
-        tvTitleBar.setText("KotlinRecyclerViewDemo")
+        tvTitleBar.text = "KotlinRecyclerViewDemo"
         model = ViewModelProviders.of(this)[MainActivityViewModel::class.java]
         initView()
         observerViewModel()
@@ -65,11 +65,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun observerViewModel() {
 
-        model.getNewTaipeiCityLiveData().observe(this,Observer<NewTaipeiCityModel>{data ->
+        model.getNewTaipeiCityLiveData().observe(this,
+            Observer<NewTaipeiCityModel>{data ->
             Log.d("api", "api1: ${data}")
             uBickList.clear()
             uBickList.addAll(data.result.records)
             adapter!!.notifyDataSetChanged()
+
+//                data.result.limit = 2
+//                data.result.total = 5
+//
+//                with(data.result){
+//                    limit = 2
+//                    total = 5
+//                }
+
         })
     }
 }
