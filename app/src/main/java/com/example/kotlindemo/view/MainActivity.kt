@@ -65,11 +65,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun observerViewModel() {
 
-        model.getNewTaipeiCityLiveData().observe(this,Observer<NewTaipeiCityModel>{data ->
+        model.getNewTaipeiCityLiveData().observe(this,
+            Observer<NewTaipeiCityModel>{data ->
             Log.d("api", "api1: ${data}")
             uBickList.clear()
             uBickList.addAll(data.result.records)
             adapter!!.notifyDataSetChanged()
+
+//                data.result.limit = 2
+//                data.result.total = 5
+//
+//                with(data.result){
+//                    limit = 2
+//                    total = 5
+//                }
+
         })
     }
 }
