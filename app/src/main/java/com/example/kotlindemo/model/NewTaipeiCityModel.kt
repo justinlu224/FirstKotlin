@@ -69,4 +69,8 @@ data class Field(
      val sno: String? = null
      val tot: String? = null
 
+     override fun toString(): String {
+         return "Record{$act , $ar, $aren, $lat, $lng, $mday, $sarea, $sareaen}"
+     }
+
  }

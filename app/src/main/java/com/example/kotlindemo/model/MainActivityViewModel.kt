@@ -4,73 +4,112 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.kotlindemo.common.APIConst
 import com.example.kotlindemo.common.APIManager
+import com.example.kotlindemo.view.FirstFragmentViewModel
+import com.example.kotlindemo.view.SecondFragmentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel : ViewModel(), FirstFragmentViewModel, SecondFragmentViewModel {
+    override fun getCityData(): LiveData<List<Record>> {
+        return newTaipeiCity
+    }
+
+    override fun getMarkData(): LiveData<List<Record>> {
+        return markerList
+    }
+
+    override fun getMarkList(): List<Record> {
+        return markers
+    }
 
     private var userList = MutableLiveData<List<User>>()
-    private var newTaipeiCity = MutableLiveData<NewTaipeiCityModel>()
+    private var newTaipeiCity = MutableLiveData<List<Record>>()
     private var list: MutableList<User> = ArrayList()
     private val apiService = APIConst.getAPIService()
     private var markerList = MutableLiveData<List<Record>>()
+    private var markers = mutableListOf<Record>()
 
     init {
         getUserList()
         getNewTaipeiCityList()
     }
-/*
+
+//    private fun getNewTaipeiCityList() {
+//        apiService.getNewTaipeiCityList()
+//            .enqueue(object : Callback, retrofit2.Callback<List<Record>> {
+//                override fun onFailure(call: Call<List<Record>>, t: Throwable) {
+//
+//                    Log.d("MvvM", "data: ${t.message.toString()}")
+//
+//                }
+//
+//                override fun onResponse(
+//                    call: Call<List<Record>>,
+//                    response: Response<List<Record>>
+//                ) {
+//
+//                    val data = response.body()
+//
+//                    if (data != null) {
+//                        newTaipeiCity.value = data
+//                        markerList.value = data
+//                        markers.addAll(data)
+//                        Log.d("MvvM", "data: ${data.get(0).sarea}")
+//                    } else {
+//                        Log.d("MvvM", "data: null")
+//                    }
+//                }
+//            })
+//    }
+
+
     private fun getNewTaipeiCityList() {
-        apiService.getNewTaipeiCityList()
-            .enqueue(object : Callback, retrofit2.Callback<NewTaipeiCityModel> {
-                override fun onFailure(call: Call<NewTaipeiCityModel>, t: Throwable) {
-
-                    Log.d("MvvM", "data: ${t.message.toString()}")
-
+        viewModelScope.launch {
+            try {
+                val data = withContext(Dispatchers.Main) {
+                    apiService.getNewTaipeiCityList()
                 }
-
-                override fun onResponse(
-                    call: Call<NewTaipeiCityModel>,
-                    response: Response<NewTaipeiCityModel>
-                ) {
-
-                    val data = response.body()
-
-                    if (data != null) {
-                        newTaipeiCity.value = data
-                        markerList.value = data.result.records
-                        Log.d("MvvM", "data: ${data.result.records.get(0).sarea}")
-                    } else {
-                        Log.d("MvvM", "data: null")
-                    }
-                }
-            })
-    }
- */
-
-    private fun getNewTaipeiCityList() {
-        APIManager().callGetNewTaipeiCityList { data, error ->
-            var data = data as? NewTaipeiCityModel
-            // 有錯誤訊息
-            if (error != null) {
-                Log.d("Testing", "error: ${error.message.toString()}")
-                return@callGetNewTaipeiCityList
+                newTaipeiCity.value = data
+                markerList.value = data
+                markers.addAll(data)
+                Log.d("MvvM", "data: ${data.get(0).sarea}")
+            } catch (e: Exception) {
+                Log.d("MvvM", "Exception: ${e.message}")
             }
-
-            // 資料為 null
-            if (data == null) {
-                Log.d("Testing", "data IS NULL!")
-                return@callGetNewTaipeiCityList
-            }
-
-            // 成功取得資料
-            newTaipeiCity.value = data
-            markerList.value = data.result.records
-            Log.d("Testing", "data: ${data.result.records.get(0).sarea}")
-
         }
-
     }
+
+//    private fun getNewTaipeiCityListWithHandle() {
+//        APIManager().callGetNewTaipeiCityList { data, error ->
+//            var data = data as? List<Record>
+//            // 有錯誤訊息
+//            if (error != null) {
+//                Log.d("Testing", "error: ${error.message.toString()}")
+//                return@callGetNewTaipeiCityList
+//            }
+//
+//            // 資料為 null
+//            if (data == null) {
+//                Log.d("Testing", "data IS NULL!")
+//                return@callGetNewTaipeiCityList
+//            }
+//
+//            // 成功取得資料
+//            newTaipeiCity.value = data
+//            markerList.value = data
+//            Log.d("Testing", "data: ${data.get(0).sarea}")
+//
+//        }
+//
+//    }
 
     fun reTry() {
         getNewTaipeiCityList()
@@ -86,7 +125,7 @@ class MainActivityViewModel : ViewModel() {
         return userList
     }
 
-    fun getNewTaipeiCityLiveData(): LiveData<NewTaipeiCityModel> {
+    fun getNewTaipeiCityLiveData(): LiveData<List<Record>> {
         return newTaipeiCity
     }
 

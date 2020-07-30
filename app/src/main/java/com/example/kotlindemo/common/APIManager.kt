@@ -34,10 +34,10 @@ class APIManager {
         })
     }
 
-    fun callGetNewTaipeiCityList(completion: DoneHandle) {
-        val cell = apiClient?.getNewTaipeiCityList()
-        handle(cell, completion)
-    }
+//    fun callGetNewTaipeiCityList(completion: DoneHandle) {
+//        val cell = apiClient?.getNewTaipeiCityListWithHandle()
+//        handle(cell, completion)
+//    }
 
 //    fun callGetNewTaipeiCityList(completion: GetNewTaipeiCityListCompletion) {
 //        doGetNewTaipeiCityList { isSuccess, data, error ->

@@ -1,5 +1,6 @@
 package com.example.kotlindemo.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,19 +22,19 @@ import com.example.kotlindemo.model.Record
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var  tvTitleBar: TextView
-    private lateinit var  recyclerView:RecyclerView
+    private lateinit var tvTitleBar: TextView
+    private lateinit var recyclerView: RecyclerView
     private var uBickList = ArrayList<Record>()
     private var adapter: MainAdapter? = null
 
-    private lateinit var model:MainActivityViewModel
+    private lateinit var model: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val api = APIConst
         Log.d("api", "api1: ${api}")
-         tvTitleBar = findViewById(R.id.tvTitleBar)
+        tvTitleBar = findViewById(R.id.tvTitleBar)
         recyclerView = findViewById(R.id.recyclerView)
 
         tvTitleBar.text = "KotlinRecyclerViewDemo"
@@ -52,13 +53,11 @@ class MainActivity : AppCompatActivity() {
         adapter = MainAdapter(uBickList)
         recyclerView.adapter = adapter
 
-//        adapter!!.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener(
-//            { baseQuickAdapter: BaseQuickAdapter<Any, BaseViewHolder>, view: View, i: Int ->
-//
-//
-//            Toast.makeText(this,"onClick ${i}",Toast.LENGTH_SHORT).show()
-//        }))
+        adapter!!.setOnItemClickListener { baseQuickAdapter: BaseQuickAdapter<Any, BaseViewHolder>, view: View, i: Int ->
 
+            startActivity(Intent(this,MainViewPageActivity::class.java))
+            Toast.makeText(this, "onClick ${i}", Toast.LENGTH_SHORT).show()
+        }
 
 
     }
@@ -66,12 +65,17 @@ class MainActivity : AppCompatActivity() {
     private fun observerViewModel() {
 
         model.getNewTaipeiCityLiveData().observe(this,
-            Observer<NewTaipeiCityModel>{data ->
-            Log.d("api", "api1: ${data}")
-            uBickList.clear()
-            uBickList.addAll(data.result.records)
-            adapter!!.notifyDataSetChanged()
+            Observer<List<Record>> { data ->
+                Log.d("api", "api1: ${data}")
+                uBickList.clear()
+                uBickList.addAll(data)
+                adapter!!.notifyDataSetChanged()
 
+                //將data以 sarea key值做分組 另外產生一個map <String?, List<recode>>
+                val map = data.groupBy { it.sarea }
+                map.forEach {
+                    Log.d("map", "key: ${it.key}, val: ${it.value.toString()}")
+                }
 //                data.result.limit = 2
 //                data.result.total = 5
 //
@@ -80,6 +84,6 @@ class MainActivity : AppCompatActivity() {
 //                    total = 5
 //                }
 
-        })
+            })
     }
 }
